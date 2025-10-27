@@ -14,7 +14,6 @@ config({path: `${__dirname}/.env`})
 const args = process.argv.slice(2);
 const dev = args.some(v => v === "dev");
 const test = args.some(v => v === 'test');
-console.log(args.find(v => v.match(/^port=/)) || 'no port')
 const port = Number(args.find(v => v.match(/^port=/))?.substring(5)) || (dev ? 8082 : test ? 8083 : 8080);
 const hostname = (dev || test) ? 'localhost' : process.env.NEXT_PUBLIC_HOSTNAME
 const project = process.env.NEXT_PUBLIC_PROJECT
@@ -40,16 +39,23 @@ exp.get('/api/stream', (req, res) => {
   res.end()
 })
 exp.all('*', (req, res) => {
-  handler(req, res)
+  handler(req, res).catch(err => {
+    console.error('Request handling error:', {
+      message: err.message,
+      code: err.code,
+      stack: JSON.stringify(err.stack),
+      requireStack: JSON.stringify(err.requireStack)
+    })
+  })
 })
 
 app.prepare().then(() => {
 
   const name = (dev || test) ? project : hostname
   spdy.createServer(  {
-    key: (dev || test) && fs.existsSync(`${name}.key`) ? fs.readFileSync(`${name}.key`) : fs.readFileSync(`/var/www/html/certs/${name}/privkey.pem`),
-    cert: (dev || test) && fs.existsSync(`${name}.crt`) ? fs.readFileSync(`${name}.crt`) : fs.readFileSync(`/var/www/html/certs/${name}/fullchain.pem`),
-    ca: (dev || test) && fs.existsSync(`${name}.csr`) ? fs.readFileSync(`${name}.csr`) : fs.readFileSync(`/var/www/html/certs/${name}/chain.pem`)
+    key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
+    cert: fs.readFileSync(`${__dirname}/certs/fullchain.pem`),
+    ca: fs.readFileSync(`${__dirname}/certs/chain.pem`)
   }, exp).listen(port, () => {
     console.log(`Listening on HTTPS port ${port}`);
   })

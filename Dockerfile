@@ -1,23 +1,20 @@
 ARG PORT
 
-FROM node:latest
+FROM node:23
 
 USER root
 
-RUN ["cp" "/etc/letsencrypt/live/sysvisionz.com/*" "./certs/sysvisionz.com/"]
 
-COPY /certs/ /var/www/html/certs/sysvisionz.com
-COPY package.json package-lock.json src server-ts .eslintrc.json tsconfig.json /var/www/html/sysvisionz.com/
-COPY package.json package-lock.json src server-ts .eslintrc.json tsconfig.json /var/www/html/sysvisionz.com2/
+WORKDIR /var/www/html/sysvisionz.com
 
-WORKDIR /src
-
-COPY .npmrc-prod ./.npmrc
-COPY .env-prod ./.env
+COPY certs/ certs
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+COPY server.js server.js
+COPY .env-prod .env
+COPY .npmrc-prod .npmrc
+COPY .next .next
 
 RUN npm ci
-RUN npm run build
-RUN rm -rf ./src ./server-ts
-RUN npm run start port=$PORT
-
-EXPOSE $PORT
+RUN nohup npm run start port=8081 &
+EXPOSE 8081
