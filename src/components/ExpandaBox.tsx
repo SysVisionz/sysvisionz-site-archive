@@ -16,7 +16,9 @@ const ExpandaBox: FCWC<{open: boolean, className: string, orientation?: 'right' 
 	})
 	const observer = useRef<ResizeObserver | null>(null);
 	useEffect(() => {
-		if (!observer.current){
+		let observe = observer.current
+		const refer = ref.current
+		if (!observe && refer){
 			observer.current = new ResizeObserver(() => {
 				const {height, width} = dimensions;
 				const {clientWidth, clientHeight} = ref.current || {}
@@ -24,16 +26,19 @@ const ExpandaBox: FCWC<{open: boolean, className: string, orientation?: 'right' 
 					setDimensions();
 				}
 			})
+			observe = observer.current
+		}
+		if (refer){
+			observe!.observe(refer)
 		}
 		setDimensions();
 		
-		observer.current.observe(ref.current!);
 		return () => {
-			if (observer.current && ref.current){
-				observer.current.unobserve(ref.current);
+			if (observe && refer){
+				observe.unobserve(refer);
 			}
 		}
-	}, [open, ref.current]);
+	}, [open]);
 	return (
 	<div className={classNamer(style.container, orientation, className)} style={{...dimensions}}>
 		<div className={style.content} ref={ref}>

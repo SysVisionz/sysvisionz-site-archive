@@ -8,7 +8,7 @@
     "build": "rm -rf .next && npm run build-server && next build && npm run build-export",
     "build-export": "rm -rf ../export && mkdir ../export && mkdir ../export/.next && cp -r ./.next ../export && cp ./package.json ../export && cp ./package-lock.json ../export && cp ./server.js ../export && cp ./.env-prod ../export/.env && cp ./.npmrc-prod ../export/.npmrc",
     "copy-certs": "if [ -d 'certs' ]; then rm -R certs; fi && mkdir certs && cp -r /etc/letsencrypt/live/sysvisionz.com/* certs/",
-    "docker-build": "sudo docker build --output=$DOCKER_EXPORT -t sysvisionz --add-host host.docker.internal:host-gateway --no-cache --progress=plain  .",
+    "docker-build": "sudo docker build --output=$DOCKER_EXPORT/sysvisionz -t sysvisionz --add-host host.docker.internal:host-gateway --no-cache --progress=plain  .",
     "docker-run": "sudo docker run sysvisionz",
     "deploy": "npm run copy-certs && npm run docker-build && npm run docker-run",
     "start": "node server.js",
@@ -32,6 +32,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "spdy": "^4.0.2",
+    "status-range-handler": "^0.2.1",
     "supercookie": "^5.0.3",
     "validator": "^13.12.0"
   },
