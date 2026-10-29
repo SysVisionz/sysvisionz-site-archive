@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -19,15 +23,39 @@
       }
     ],
     "paths": {
-      "~/icons": ["./src/icons/index.ts"],
-      "~/icons/*": ["./src/icons/*"],
-      "~/images": ["./src/images/index.ts"],
-      "~/images/*": ["./src/images/*"],
-      "~/shared/*": ["./src/shared/*"],
-      "~/contexts/*": ["./src/contexts/*"],
-      "~/*": ["./src/components/*"]
+      "~/icons": [
+        "./src/icons/index.ts"
+      ],
+      "~/icons/*": [
+        "./src/icons/*"
+      ],
+      "~/images": [
+        "./src/images/index.ts"
+      ],
+      "~/images/*": [
+        "./src/images/*"
+      ],
+      "~/shared/*": [
+        "./src/shared/*"
+      ],
+      "~/contexts/*": [
+        "./src/contexts/*"
+      ],
+      "~/*": [
+        "./src/components/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts", "global.d.ts"],
-  "exclude": ["node_modules", "deprecated"]
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts",
+    "global.d.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "deprecated"
+  ]
 }

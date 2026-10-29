@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import next from "next";
-import spdy from "spdy";
+import http2Express from "http2-express-bridge";
+import http2 from "node:http2";
 import express, { Request, Response } from "express";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -32,13 +33,8 @@ const shouldCompress = (req: Request, res: Response) => {
 
 const handler = app.getRequestHandler();
 
-const exp = express()
+const exp = http2Express(express)
 exp.use(compression({filter: shouldCompress}))
-exp.get('/api/stream', (req, res) => {
-  res.write('hello')
-  res.write('world')
-  res.end()
-})
 exp.all('*', (req, res) => {
   handler(req, res)
 })
@@ -46,10 +42,9 @@ exp.all('*', (req, res) => {
 app.prepare().then(() => {
 
   const name = (dev || test) ? project : hostname
-  spdy.createServer(  {
+  http2.createSecureServer({
     key: (dev || test) && fs.existsSync(`${name}.key`) ? fs.readFileSync(`${name}.key`) : fs.readFileSync(`/var/www/html/certs/${name}/privkey.pem`),
     cert: (dev || test) && fs.existsSync(`${name}.crt`) ? fs.readFileSync(`${name}.crt`) : fs.readFileSync(`/var/www/html/certs/${name}/fullchain.pem`),
-    ca: (dev || test) && fs.existsSync(`${name}.csr`) ? fs.readFileSync(`${name}.csr`) : fs.readFileSync(`/var/www/html/certs/${name}/chain.pem`)
   }, exp).listen(port, () => {
     console.log(`Listening on HTTPS port ${port}`);
   })
