@@ -40,7 +40,7 @@ yarn-error.log*
 next-env.d.ts
 server-ts/db/*
 !**/*model*
-server.js
+server.mjs
 /db
 /models
 /middleware

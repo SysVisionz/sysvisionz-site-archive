@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js dev",
-    "build": "rm -rf .next && npm run build-server && next build && npm run build-export",
-    "build-export": "rm -rf ../export && mkdir ../export && mkdir ../export/.next && cp -r ./.next ../export && cp ./package.json ../export && cp ./server.js ../export && cp ./.env-prod ../export/.env && cp ./.npmrc-prod ../export/.npmrc",
+    "build": "rm -rf .next && npm run build-server && next build",
+    "export": "rm -rf ../export && mkdir ../export && mkdir ../export/.next && cp -r ./.next ../export && cp ./package.json ../export && cp ./server.js ../export && cp ./.env-prod ../export/.env && cp ./.npmrc-prod ../export/.npmrc && cp ./package-lock.json ../export/package-lock.json",
     "start": "node server.js",
     "test": "node server.js test",
     "lint": "next lint",
@@ -14,20 +14,17 @@
     "docker": "./.docker.sh"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "i": "^0.3.7",
+    "http2-express-bridge": "^1.0.7",
     "iron-session": "^8.0.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
-    "next": "^15.1.5",
-    "npm": "^11.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "spdy": "^4.0.2",
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "supercookie": "^5.0.3",
     "validator": "^13.12.0"
   },
@@ -46,5 +43,8 @@
     "eslint-config-next": "15.0.2",
     "sass": "^1.80.6",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "supercookie@5.0.3": true
   }
 }

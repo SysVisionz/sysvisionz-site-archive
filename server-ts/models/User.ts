@@ -4,8 +4,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 // import { hashTag } from '../db/dataConfig';
 const hashTag = 'thehashtagplaceholderthing'
-export interface UserObj extends Document{
-	_id: ObjectId,
+export interface UserObj extends Omit<Document, 'toJSON' | '_id'>{
+	_id: ObjectId
 	displayName: string,
 	persist?: boolean,
 	password: string,
