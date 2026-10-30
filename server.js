@@ -1,7 +1,5 @@
-import fs from "node:fs";
 import next from "next";
-import http2Express from "http2-express-bridge";
-import http2 from "node:http2";
+import http from "node:http";
 import express from "express";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
@@ -26,17 +24,14 @@ const shouldCompress = (req, res) => {
     return compression.filter(req, res);
 };
 const handler = app.getRequestHandler();
-const exp = http2Express(express);
+const exp = express();
 exp.use(compression({ filter: shouldCompress }));
 exp.all('*', (req, res) => {
     handler(req, res);
 });
 app.prepare().then(() => {
     const name = (dev || test) ? project : hostname;
-    http2.createSecureServer({
-        key: (dev || test) && fs.existsSync(`${name}.key`) ? fs.readFileSync(`${name}.key`) : fs.readFileSync(`/var/www/html/certs/${name}/privkey.pem`),
-        cert: (dev || test) && fs.existsSync(`${name}.crt`) ? fs.readFileSync(`${name}.crt`) : fs.readFileSync(`/var/www/html/certs/${name}/fullchain.pem`),
-    }, exp).listen(port, () => {
+    http.createServer(exp).listen(port, () => {
         console.log(`Listening on HTTPS port ${port}`);
     });
 });
